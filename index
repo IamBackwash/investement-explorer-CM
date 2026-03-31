@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Investitions-WebApp</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --border: #dbe3ee;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --good: #15803d;
+      --warn: #b45309;
+      --risk-low: #166534;
+      --risk-mid: #b45309;
+      --risk-high: #b91c1c;
+      --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(180deg, #eef3fb 0%, var(--bg) 100%);
+      color: var(--text);
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 32px 20px 60px;
+    }
+
+    .hero {
+      margin-bottom: 24px;
+    }
+
+    .hero h1 {
+      margin: 0 0 10px;
+      font-size: 2rem;
+    }
+
+    .hero p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+
+    .card h2 {
+      margin-top: 0;
+      margin-bottom: 16px;
+      font-size: 1.25rem;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-size: 1rem;
+      background: #fff;
+      color: var(--text);
+    }
+
+    input:focus,
+    select:focus {
+      outline: 2px solid rgba(37, 99, 235, 0.15);
+      border-color: var(--primary);
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 18px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: none;
+      border-radius: 12px;
+      padding: 12px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+    }
+
+    .btn-secondary {
+      background: #e5e7eb;
+      color: var(--text);
+    }
+
+    .btn-secondary:hover {
+      background: #d1d5db;
+    }
+
+    .results-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      background: #eaf1ff;
+      color: var(--primary);
+    }
+
+    .placeholder {
+      color: var(--muted);
+      background: #f8fafc;
+      border: 1px dashed var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      line-height: 1.6;
+    }
+
+    .proposal {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      margin-top: 14px;
+      background: #fbfdff;
+    }
+
+    .proposal h3 {
+      margin: 0 0 8px;
+      font-size: 1.1rem;
+    }
+
+    .proposal p {
+      margin: 8px 0;
+      line-height: 1.55;
+    }
+
+    .meta {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .meta-box {
+      border-radius: 12px;
+      padding: 12px;
+      background: white;
+      border: 1px solid var(--border);
+    }
+
+    .meta-box strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.9rem;
+    }
+
+    .risk-low {
+      color: var(--risk-low);
+      font-weight: 700;
+    }
+
+    .risk-mid {
+      color: var(--risk-mid);
+      font-weight: 700;
+    }
+
+    .risk-high {
+      color: var(--risk-high);
+      font-weight: 700;
+    }
+
+    .summary {
+      margin-top: 18px;
+      padding: 14px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      line-height: 1.6;
+    }
+
+    .footer-note {
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 900px) {
+      .grid,
+      .form-grid,
+      .meta {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="hero">
+      <h1>Investitions-WebApp</h1>
+      <p>Gib deine Daten ein. Die WebApp erstellt passende Investitionsvorschläge mit Begründung, Risikoeinschätzung und geschätzter Rendite.</p>
+    </div>
+
+    <div class="grid">
+      <section class="card">
+        <h2>Deine Angaben</h2>
+        <div class="form-grid">
+          <div class="field">
+            <label for="startkapital">Startkapital in CHF</label>
+            <input type="number" id="startkapital" min="0" step="100" value="2000" />
+          </div>
+
+          <div class="field">
+            <label for="sparbetrag">Monatlicher Sparbetrag in CHF</label>
+            <input type="number" id="sparbetrag" min="0" step="50" value="100" />
+          </div>
+
+          <div class="field">
+            <label for="horizont">Anlagehorizont</label>
+            <select id="horizont">
+              <option value="kurz">Kurzfristig, 1 bis 3 Jahre</option>
+              <option value="mittel">Mittelfristig, 4 bis 7 Jahre</option>
+              <option value="lang" selected>Langfristig, 8 bis 15 Jahre</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="risiko">Risikobereitschaft</label>
+            <select id="risiko">
+              <option value="tief">Tief</option>
+              <option value="mittel" selected>Mittel</option>
+              <option value="hoch">Hoch</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="ziel">Investitionsziel</label>
+            <select id="ziel">
+              <option value="sicherheit">Sicherheit</option>
+              <option value="vermoegen" selected>Vermögensaufbau</option>
+              <option value="vorsorge">Altersvorsorge</option>
+              <option value="kurzfristig">Kurzfristiges Sparen</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="nachhaltigkeit">Nachhaltigkeit wichtig?</label>
+            <select id="nachhaltigkeit">
+              <option value="ja">Ja</option>
+              <option value="nein" selected>Nein</option>
+            </select>
+          </div>
+
+          <div class="field full">
+            <label for="anlageform">Bevorzugte Anlageform</label>
+            <select id="anlageform">
+              <option value="egal" selected>Offen für alles</option>
+              <option value="etf">ETFs</option>
+              <option value="aktien">Aktien</option>
+              <option value="obligationen">Obligationen</option>
+              <option value="sparkonto">Sparkonto</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn-primary" onclick="berechneVorschlaege()">Vorschläge anzeigen</button>
+          <button class="btn-secondary" onclick="formularZuruecksetzen()">Zurücksetzen</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="results-header">
+          <h2>Ergebnis</h2>
+          <span class="badge" id="profilBadge">Noch kein Profil berechnet</span>
+        </div>
+
+        <div id="resultBox" class="placeholder">
+          Hier erscheinen nach der Eingabe sinnvolle Investitionsvorschläge.
+        </div>
+
+        <div class="footer-note">
+          Hinweis: Dieser klickbare Prototyp dient zur Veranschaulichung. Er ersetzt keine professionelle Finanzberatung.
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    function formularZuruecksetzen() {
+      document.getElementById('startkapital').value = 2000;
+      document.getElementById('sparbetrag').value = 100;
+      document.getElementById('horizont').value = 'lang';
+      document.getElementById('risiko').value = 'mittel';
+      document.getElementById('ziel').value = 'vermoegen';
+      document.getElementById('nachhaltigkeit').value = 'nein';
+      document.getElementById('anlageform').value = 'egal';
+      document.getElementById('profilBadge').textContent = 'Noch kein Profil berechnet';
+      document.getElementById('resultBox').className = 'placeholder';
+      document.getElementById('resultBox').innerHTML = 'Hier erscheinen nach der Eingabe sinnvolle Investitionsvorschläge.';
+    }
+
+    function renditeText(min, max) {
+      return min === max ? min + ' % pro Jahr' : min + ' bis ' + max + ' % pro Jahr';
+    }
+
+    function risikoKlasse(risiko) {
+      if (risiko === 'Tief') return 'risk-low';
+      if (risiko === 'Mittel') return 'risk-mid';
+      return 'risk-high';
+    }
+
+    function proposalHTML(titel, begruendung, risiko, rendite, aufteilung) {
+      return `
+        <div class="proposal">
+          <h3>${titel}</h3>
+          <p><strong>Aufteilung:</strong> ${aufteilung}</p>
+          <p><strong>Begründung:</strong> ${begruendung}</p>
+          <div class="meta">
+            <div class="meta-box">
+              <strong>Risiko</strong>
+              <span class="${risikoKlasse(risiko)}">${risiko}</span>
+            </div>
+            <div class="meta-box">
+              <strong>Geschätzte Rendite</strong>
+              <span>${rendite}</span>
+            </div>
+            <div class="meta-box">
+              <strong>Geeignet für</strong>
+              <span>${titel}</span>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function berechneVorschlaege() {
+      const startkapital = Number(document.getElementById('startkapital').value) || 0;
+      const sparbetrag = Number(document.getElementById('sparbetrag').value) || 0;
+      const horizont = document.getElementById('horizont').value;
+      const risiko = document.getElementById('risiko').value;
+      const ziel = document.getElementById('ziel').value;
+      const nachhaltigkeit = document.getElementById('nachhaltigkeit').value;
+      const anlageform = document.getElementById('anlageform').value;
+
+      const resultBox = document.getElementById('resultBox');
+      const profilBadge = document.getElementById('profilBadge');
+
+      let profil = '';
+      let vorschlag1 = '';
+      let vorschlag2 = '';
+      let zusammenfassung = '';
+
+      if (startkapital < 0 || sparbetrag < 0) {
+        resultBox.className = 'placeholder';
+        resultBox.innerHTML = 'Bitte gib gültige positive Werte ein.';
+        profilBadge.textContent = 'Ungültige Eingaben';
+        return;
+      }
+
+      if (risiko === 'tief' || ziel === 'sicherheit' || anlageform === 'sparkonto') {
+        profil = 'Defensives Profil';
+        vorschlag1 = proposalHTML(
+          'Defensiver Mix',
+          'Dieser Vorschlag passt zu Personen, die wenig Schwankungen möchten und Sicherheit bevorzugen. Ein hoher Anteil an Sparkonto und Obligationen macht die Anlage stabiler.',
+          'Tief',
+          renditeText(1, 3),
+          '60 % Sparkonto, 30 % Obligationen, 10 % ETF'
+        );
+        vorschlag2 = proposalHTML(
+          'Sicherheitsorientierter ETF-Mix',
+          'Ein kleiner ETF-Anteil ermöglicht etwas Wachstum. Der Fokus bleibt aber auf Kapitalerhalt und planbarer Entwicklung.',
+          'Tief bis mittel',
+          renditeText(2, 4),
+          '50 % Obligationen, 30 % Sparkonto, 20 % ETF'
+        );
+      } else if (risiko === 'hoch' || ziel === 'vermoegen' && horizont === 'lang' || anlageform === 'aktien') {
+        profil = 'Dynamisches Profil';
+        vorschlag1 = proposalHTML(
+          'Wachstumsorientierter Mix',
+          'Dieser Vorschlag eignet sich für einen langen Anlagehorizont und eine höhere Risikobereitschaft. Ein hoher Aktien- und ETF-Anteil bietet die besten Chancen auf langfristiges Wachstum.',
+          'Hoch',
+          renditeText(5, 8),
+          '70 % ETF, 20 % Aktien, 10 % Sparkonto'
+        );
+        vorschlag2 = proposalHTML(
+          'Chancenorientierter Aktienmix',
+          'Wer stärkere Kursschwankungen akzeptiert, kann stärker auf Aktien setzen. Das bietet höhere Chancen, aber auch mehr Risiko.',
+          'Hoch',
+          renditeText(6, 9),
+          '60 % Aktien, 30 % ETF, 10 % Sparkonto'
+        );
+      } else {
+        profil = 'Ausgewogenes Profil';
+        vorschlag1 = proposalHTML(
+          'Ausgewogener Mix',
+          'Dieser Vorschlag verbindet Wachstum und Sicherheit. ETFs sorgen für Renditechancen, Obligationen und Sparkonto verringern das Risiko.',
+          'Mittel',
+          renditeText(3, 6),
+          '50 % ETF, 30 % Obligationen, 20 % Sparkonto'
+        );
+        vorschlag2 = proposalHTML(
+          'Balance mit Fokus auf Stabilität',
+          'Diese Variante ist etwas vorsichtiger. Sie eignet sich gut für Menschen, die investieren möchten, aber keine zu hohen Schwankungen wollen.',
+          'Mittel',
+          renditeText(3, 5),
+          '40 % ETF, 40 % Obligationen, 20 % Sparkonto'
+        );
+      }
+
+      if (anlageform === 'etf') {
+        zusammenfassung += 'Du bevorzugst ETFs. Deshalb sind breit gestreute ETF-Lösungen besonders passend. ';
+      } else if (anlageform === 'aktien') {
+        zusammenfassung += 'Du bevorzugst Aktien. Deshalb liegt der Fokus stärker auf Wachstum und etwas höheren Renditechancen. ';
+      } else if (anlageform === 'obligationen') {
+        zusammenfassung += 'Du bevorzugst Obligationen. Deshalb wird mehr Stabilität berücksichtigt. ';
+      } else if (anlageform === 'sparkonto') {
+        zusammenfassung += 'Du bevorzugst ein Sparkonto. Deshalb steht Sicherheit klar im Vordergrund. ';
+      } else {
+        zusammenfassung += 'Du bist offen für verschiedene Anlageformen. Deshalb werden gemischte Vorschläge angezeigt. ';
+      }
+
+      if (nachhaltigkeit === 'ja') {
+        zusammenfassung += 'Da dir Nachhaltigkeit wichtig ist, solltest du bei ETFs oder Aktien auf ESG- oder nachhaltige Fonds achten. ';
+      }
+
+      if (horizont === 'kurz') {
+        zusammenfassung += 'Bei einem kurzen Anlagehorizont sollte der Sicherheitsanteil höher sein, weil weniger Zeit bleibt, Kursschwankungen auszugleichen. ';
+      } else if (horizont === 'mittel') {
+        zusammenfassung += 'Bei einem mittleren Anlagehorizont ist eine Mischung aus Sicherheit und Wachstum sinnvoll. ';
+      } else {
+        zusammenfassung += 'Bei einem langen Anlagehorizont können stärkere Schwankungen eher ausgehalten werden, weil mehr Zeit für Erholung vorhanden ist. ';
+      }
+
+      const gesamteinzahlungErstesJahr = startkapital + sparbetrag * 12;
+
+      resultBox.className = '';
+      profilBadge.textContent = profil;
+      resultBox.innerHTML = `
+        <div class="summary">
+          <strong>Dein Profil:</strong> ${profil}<br>
+          <strong>Gesamteinzahlung im ersten Jahr:</strong> CHF ${gesamteinzahlungErstesJahr.toLocaleString('de-CH')}<br>
+          <strong>Kurzbewertung:</strong> ${zusammenfassung}
+        </div>
+        ${vorschlag1}
+        ${vorschlag2}
+      `;
+    }
+  </script>
+</body>
+</html>
